@@ -9,6 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WWI.Warehouse.Audit.Server"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WWI.Warehouse.Audit.Shared", "WWI.Warehouse.Audit\Shared\WWI.Warehouse.Audit.Shared.csproj", "{F58D5B68-5828-4E21-87DB-DDD23F4BB2AA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BB6DCBF6-021E-483A-B646-EA4848555DD4}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\azure-static-web-apps-yellow-dune-07d288b03.yml = .github\workflows\azure-static-web-apps-yellow-dune-07d288b03.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
