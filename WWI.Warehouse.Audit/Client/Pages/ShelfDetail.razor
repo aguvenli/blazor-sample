@@ -1,0 +1,206 @@
+﻿@using WWI.Warehouse.Audit.Client.CustomComponents
+@inject Sotsera.Blazor.Toaster.IToaster Toaster
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@page "/detail/{StorageShelfId}"
+
+<style>
+    .row-custom {
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .separator {
+        border-bottom: solid 1px #dee2e6;
+        width:100%;
+    }
+
+    .circle-button {
+        background-color: #124877;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin: 5px;
+    }
+
+        .circle-button .k-icon {
+            color: white;
+            font-size: 40px;
+        }
+
+        .circle-button:hover {
+            background-color: #124877b3;
+        }
+</style>
+
+<div style="width:100%;">
+    <Loader IsInitialDataLoadComplete=@IsInitialDataLoadComplete></Loader>
+    <div class="row row-custom separator">
+        <div class="col-4"><h3>@Localizer["Shelf Detail"]</h3></div>
+        <div class="col-3">
+            <div class="row justify-content-center">
+                <a class="k-button circle-button" >
+                    <span class="k-icon k-i-arrow-chevron-up" @onclick="@GetUpperShelf"></span>
+                </a>
+                <a class="k-button circle-button">
+                    <span class="k-icon k-i-arrow-chevron-down" @onclick="@GetLowerShelf"></span>
+                </a>
+            </div>
+            <div class="row text-center">
+                <label>@Localizer["Shelf"]</label>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row justify-content-center">
+                <a class="k-button circle-button" >
+                    <span class="k-icon k-i-arrow-chevron-left" @onclick="@GetNextRack"></span>
+                </a>
+                <a class="k-button circle-button" >
+                    <span class="k-icon k-i-arrow-chevron-right" @onclick="@GetPreviousRack"></span>
+                </a>
+            </div>
+
+            <div class="row text-center">
+                <label>@Localizer["Rack"]</label>
+            </div>
+        </div>
+    </div>
+    <div class="row row-custom separator">
+        <div class="col-3">
+            <div class="row">
+                <div class="col-5">
+                    <label class="text-truncate">@Localizer["Warehouse"]</label>
+                </div>
+                <div class="col-3">
+                    <strong>@SelectedShelf.Warehouse</strong>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <div class="col-5">
+                    <label class="text-truncate">@Localizer["Aisle"]</label>
+                </div>
+                <div class="col-3">
+                    <strong>@SelectedShelf.Aisle</strong>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <div class="col-5">
+                    <label class="text-truncate">@Localizer["Rack"]</label>
+                </div>
+                <div class="col-3">
+                    <strong>@SelectedShelf.Rack</strong>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <div class="col-5">
+                    <label class="text-truncate">@Localizer["Shelf"]</label>
+                </div>
+                <div class="col-3">
+                    <strong>@SelectedShelf.Shelf</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <ShelfTable Shelf=@SelectedShelf></ShelfTable>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string StorageShelfId { get; set; }
+    bool IsInitialDataLoadComplete { get; set; }
+    List<ShelfModel> ShelfGridData { get; set; } = new List<ShelfModel>();
+    ShelfModel SelectedShelf { get; set; } = new ShelfModel();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.IsInitialDataLoadComplete = false;
+        var uri = string.Concat("api/shelf?shelfId=", StorageShelfId);
+        var result = await Http.GetFromJsonAsync<ShelfModel>(uri);
+
+        this.SelectedShelf = result;     
+        
+        this.IsInitialDataLoadComplete = true;
+    }
+
+    private async Task GetUpperShelf()
+    {
+
+        var result = this.ShelfGridData.FirstOrDefault(i => i.Warehouse == SelectedShelf.Warehouse &&
+                                                            i.Aisle == SelectedShelf.Aisle &&
+                                                            i.Rack == SelectedShelf.Rack &&
+                                                            i.Shelf == (SelectedShelf.Shelf + 1));
+
+        if (result != null)
+        {
+            this.SelectedShelf = result;
+            NavigationManager.NavigateTo($"detail/{result.StorageShelfId}");
+        }
+        else
+        {
+            Toaster.Error("You are on the Last Shelf ");            
+        }
+
+    }
+
+    private async Task GetLowerShelf()
+    {
+        var result = this.ShelfGridData.FirstOrDefault(i => i.Warehouse == SelectedShelf.Warehouse &&
+                                                            i.Aisle == SelectedShelf.Aisle &&
+                                                            i.Rack == SelectedShelf.Rack &&
+                                                            i.Shelf == (SelectedShelf.Shelf - 1));
+
+        if (result != null)
+        {
+            this.SelectedShelf = result;
+            NavigationManager.NavigateTo($"detail/{result.StorageShelfId}");
+        }
+        else
+        {
+            Toaster.Error("You are on the First Shelf ");          
+        }
+    }
+    private async Task GetNextRack()
+    {
+        var result = this.ShelfGridData.FirstOrDefault(i => i.Warehouse == SelectedShelf.Warehouse &&
+                                                           i.Aisle == SelectedShelf.Aisle &&
+                                                           i.Rack == (SelectedShelf.Rack + 2) &&
+                                                           i.Shelf == 1);
+
+        if (result != null)
+        {
+            this.SelectedShelf = result;
+            NavigationManager.NavigateTo($"detail/{result.StorageShelfId}");
+        }
+        else
+        {
+            Toaster.Error("You are on the Last Rack ");          
+        }
+    }
+
+    private async Task GetPreviousRack()
+    {
+        var result = this.ShelfGridData.FirstOrDefault(i => i.Warehouse == SelectedShelf.Warehouse &&
+                                                           i.Aisle == SelectedShelf.Aisle &&
+                                                           i.Shelf == 1);
+
+        if (result != null)
+        {
+            this.SelectedShelf = result;
+            NavigationManager.NavigateTo($"detail/{result.StorageShelfId}");
+        }
+        else
+        {
+            Toaster.Error("You are on the First Rack ");          
+        }
+    }
+}

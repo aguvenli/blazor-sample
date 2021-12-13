@@ -1,0 +1,144 @@
+﻿@using WWI.Warehouse.Audit.Shared
+<style>
+    .table-button {
+        width: 100%;
+        min-width: 90px;
+        height: 50px;
+        background-color: green;
+        font-weight: bold;
+        color: white
+    }
+
+        .table-button:hover, .button-red:hover, .button-green:hover {
+            background-color: #124877b3;
+        }
+
+    .button-red {
+        background-color: #d12652;
+        color: white;
+        height: 50px;
+    }
+
+    .button-green {
+        background-color: green;
+        color: white;
+        height: 50px;
+    }
+
+    .bottle-image {
+        width: 65px;
+        height: auto;
+    }
+
+    .k-button {
+        padding: 0;
+        font-size: 0.85rem;
+    }
+
+    .action-button {
+        padding: 0;
+        font-size: 1.3rem;
+    }
+</style>
+
+<TelerikWindow Width="550px" Height="520px" Centered="true" @bind-Visible=@WindowVisible Modal="true">
+    <WindowTitle>
+        <strong><h4>@Localizer["Location"] @(string.Concat(Shelf.Warehouse, " ", Shelf.Aisle, " ", Shelf.Rack, " ", Shelf.Shelf.ToString(), " ", CurrentItem.Column, CurrentItem.Row))</h4></strong>
+    </WindowTitle>
+    <WindowActions>
+    </WindowActions>
+    <WindowContent>
+        <div class="row m-1">
+            <strong><h4>@Localizer[CurrentItem.Title]</h4></strong>
+        </div>
+        <div class="row m-1">
+            <div class="col-3">
+                @if (CurrentItem.IsOccupied)
+                {
+                    <img src="@CurrentItem.Occupant.ImageUrl" alt="bottle-image" class="bottle-image mx-auto d-block" />
+                }
+                else
+                {
+                    <img src="images/svg/bottle-placeholder.svg" alt="bottle-image" class="bottle-image mx-auto d-block" />
+                }
+            </div>
+
+            @if (CurrentItem.IsOccupied)
+            {
+                <LocationDefinition CurrentItem="@CurrentItem"></LocationDefinition>
+            }
+            else
+            {
+                <LocationDefinition></LocationDefinition>
+            }
+        </div>
+        @if (CurrentItem.IsOccupied)
+        {
+            <div class="row m-1"><TelerikButton Icon="check" Class="button-green action-button" OnClick="@Close">@Localizer["Yes, bottle is in location"]</TelerikButton></div>
+            <div class="row m-1"><TelerikButton Icon="x" Class="button-red action-button" OnClick="@Close">@Localizer["No, there is no bottle"]</TelerikButton></div>
+            <div class="row m-1"><TelerikButton Icon="x" Class="button-red action-button" OnClick="@Close">@Localizer["No, there is another bottle"]</TelerikButton></div>
+        }
+        else
+        {
+            <div class="row m-1"><TelerikButton Icon="check" Class="button-green action-button" OnClick="@Close">@Localizer["Yes, the location is free"]</TelerikButton></div>
+            <div class="row m-1"><TelerikButton Icon="x" Class="button-red action-button" OnClick="@Close">@Localizer["No, there is a bottle here"]</TelerikButton></div>
+        }
+    </WindowContent>
+</TelerikWindow>
+
+@{
+    var columns = Shelf.Columns;
+    var rows = Shelf.Rows;
+
+    <table style="border:none; width:100%">
+        <thead>
+            <tr>
+                <th class="text-center" style="width:50px"></th>
+                @foreach (var column in columns)
+                {
+                    <th class="text-center">@column</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in rows)
+            {
+                <tr>
+
+                    <td>@row</td>
+                    @foreach (var column in columns)
+                    {
+                        var bottleContainer = Shelf.GetLocation(column, row);
+                        <td>
+                            <TelerikButton Icon="check-outline"
+                               Class=@(bottleContainer.IsOccupied ? "table-button button-green" : "table-button button-red")
+                               OnClick="() => DisplayModalWindow(column, row)">
+                                @(bottleContainer.IsOccupied ? bottleContainer.Occupant.BottleInstanceId.ToString() : Localizer["Empty"] )
+                            </TelerikButton>
+                        </td>
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public ShelfModel Shelf { get; set; }
+    bool WindowVisible { get; set; } = false;
+    StorageLocationModel CurrentItem { get; set; } = new StorageLocationModel();
+
+    public async Task DisplayModalWindow(string? column, int row)
+    {
+        CurrentItem = Shelf.GetLocation(column, row);
+        WindowVisible = true;
+    }
+
+    public async Task Close()
+    {
+        CurrentItem = new StorageLocationModel();
+        WindowVisible = false;
+    }
+}

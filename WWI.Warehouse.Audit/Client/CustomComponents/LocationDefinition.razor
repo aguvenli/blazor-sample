@@ -1,0 +1,49 @@
+﻿@using WWI.Warehouse.Audit.Shared
+
+<div class="col-9">
+    <div class="row">
+        <div class="col-4">
+            <label>@Localizer["Distillery"]</label>
+        </div>
+        <div class="col-3">
+            <strong>@(CurrentItem.IsOccupied ? CurrentItem.Occupant.DistilleryName : Localizer["NA"])</strong>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label>@Localizer["Bottlery"]</label>
+        </div>
+        <div class="col-3">
+            <strong>@(CurrentItem.IsOccupied ? CurrentItem.Occupant.BottleryName : Localizer["NA"])</strong>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label>@Localizer["Distilled Year"]</label>
+        </div>
+        <div class="col-3">
+            <strong>@(CurrentItem.IsOccupied ? (CurrentItem.Occupant.DistilledYear.HasValue ? CurrentItem.Occupant.DistilledYear.ToString() : Localizer["NA"]) : Localizer["NA"])</strong>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label>@Localizer["Bottled Year"]</label>
+        </div>
+        <div class="col-3">
+            <strong>@(CurrentItem.IsOccupied ? (CurrentItem.Occupant.BottlingYear.HasValue ? CurrentItem.Occupant.BottlingYear.ToString() : Localizer["NA"]) : Localizer["NA"])</strong>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label>@Localizer["Instance Id"]</label>
+        </div>
+        <div class="col-3">
+            <strong>@(CurrentItem.IsOccupied ? CurrentItem.Occupant.BottleInstanceId : Localizer["NA"])</strong>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public StorageLocationModel CurrentItem { get; set; } = new StorageLocationModel();
+}

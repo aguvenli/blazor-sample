@@ -1,0 +1,17 @@
+﻿@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [AllowAnonymous]
+
+<RemoteAuthenticatorView Action="@Action">
+    <LoggingIn>@Localizer["Logging In"]</LoggingIn>
+    <CompletingLoggingIn>@Localizer["Completing Logging In"]</CompletingLoggingIn>
+    <LogInFailed>@Localizer["Log In Failed"]</LogInFailed>
+    <CompletingLogOut>@Localizer["Completing Log Out"]</CompletingLogOut>
+    <LogOutFailed>@Localizer["Log Out Failed"]</LogOutFailed>
+    <LogOutSucceeded>@Localizer["Log Out Succeeded"]</LogOutSucceeded>
+    <Registering>@Localizer["Registering"]</Registering>
+</RemoteAuthenticatorView>
+
+@code{
+    [Parameter] public string? Action { get; set; }
+}

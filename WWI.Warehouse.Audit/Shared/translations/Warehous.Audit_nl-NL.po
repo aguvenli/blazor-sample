@@ -1,0 +1,21 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Warehous.Audit\n"
+"Language: nl\n"
+
+#: 
+msgid "Log in"
+msgstr "TEST"
+
+#: 
+msgid "Logging In"
+msgstr "Haydi girelim"
+
+#: 
+msgid "Completing Logging In"
+msgstr "Çok bekletmeden log in"
+

@@ -1,0 +1,26 @@
+﻿@using Sotsera.Blazor.Toaster
+@layout TelerikLayout
+@inherits LayoutComponentBase
+
+<ToastContainer />
+
+<div class="page">
+
+    <main>
+
+        <div class="px-4 auth navbar">
+            <div class="text-center">
+                <a href="/" id="logoHolder">
+                    <img src="images/svg/WWI-logo-small.svg" alt="logo" class="top-logo"/>
+                </a>
+            </div>
+            <div class="top-row">
+                <LoginDisplay />
+            </div>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
