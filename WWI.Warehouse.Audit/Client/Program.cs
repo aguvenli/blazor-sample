@@ -25,7 +25,7 @@ builder.Services.AddMsalAuthentication(options =>
 {
     builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
     options.ProviderOptions.DefaultAccessTokenScopes.Add("api://407efac1-1569-4dba-828a-302dd2a77130/Wharehouse.Audit.Access");
-    options.ProviderOptions.LoginMode = "redirect";
+    //options.ProviderOptions.LoginMode = "redirect";
 });
 
 
