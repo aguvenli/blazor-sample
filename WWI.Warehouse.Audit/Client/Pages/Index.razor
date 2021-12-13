@@ -1,6 +1,4 @@
-﻿@using Telerik.Blazor
-@using Telerik.Blazor.Components
-@using WWI.Warehouse.Audit.Client.CustomComponents
+﻿@using WWI.Warehouse.Audit.Client.CustomComponents
 @using WWI.Warehouse.Audit.Client.Helpers
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
@@ -16,18 +14,9 @@
                 @* <div class="col-3">
                     <TelerikTextBox @bind-Value="@Warehouse" MaxLength=3 Width="100%" PlaceHolder="@Localizer["Warehouse"]" Class="placeholder-shown" />
                     </div>*@
-                <div class="col-3">
-                    <TelerikTextBox @bind-Value="@Aisle" MaxLength=2 Width="100%" PlaceHolder="@Localizer["Aisle"]" Class="placeholder-shown" />
-                </div>
-                <div class="col-3">
-                    <TelerikTextBox @bind-Value="@Rack" MaxLength=2 InputMode="numeric" Width="100%" PlaceHolder="@Localizer["Rack"]" Class="placeholder-shown" />
-                </div>
-                <div class="col-3">
-                    <TelerikTextBox @bind-Value="@Shelf" MaxLength=2 InputMode="numeric" Width="100%" PlaceHolder="@Localizer["Shelf"]" Class="placeholder-shown" />
-                </div>
+               
                 <div class="col-3">
                     <span class="input-group-text" @onclick="@Search">
-                        <TelerikButton ImageUrl="images/svg/ios-search-strong-secondary.svg">Search</TelerikButton>
                     </span>
                 </div>
             </div>
@@ -38,28 +27,7 @@
     <div style="margin-top:20px;">
 
 
-        <TelerikGrid Data="@ShelfGridData"
-                     TotalCount=@TotalItemCount
-                     Pageable="true"
-                     @bind-PageSize="@PageSize"
-                     @bind-Page="@CurrentPage"
-                     Sortable="true"
-                     ScrollMode="@GridScrollMode.Scrollable"
-                     Height="600px"
-                     RowHeight=70
-                     Class="custom-icons"
-                     OnRowClick="@OnRowClickHandler"
-                     OnRead="@OnReadHandler">
-            <GridSettings>
-                <GridPagerSettings InputType="@PagerInputType.Buttons" PageSizes="@PageSizes" ButtonCount="5" />
-            </GridSettings>
-            <GridColumns>
-                <GridColumn Field=@nameof(ShelfModel.Warehouse) Title="@Localizer["Warehouse"]" />
-                <GridColumn Field=@nameof(ShelfModel.Aisle) Title="@Localizer["Aisle"]" />
-                <GridColumn Field=@nameof(ShelfModel.Rack) Title="@Localizer["Rack"]" />
-                <GridColumn Field=@nameof(ShelfModel.Shelf) Title="@Localizer["Shelf"]" />
-            </GridColumns>
-        </TelerikGrid>
+
     </div>
 </div>
 <style>
@@ -85,10 +53,6 @@
     List<ShelfModel> ShelfGridData { get; set; }
     int TotalItemCount { get; set; } = 0;
 
-    protected async Task OnReadHandler(GridReadEventArgs args)
-    {
-        await SetGridData(args.Request.Page, args.Request.PageSize);
-    }
 
     private async Task SetGridData(int pageIndex, int pageSize)
     {
@@ -101,13 +65,6 @@
         TotalItemCount = data.TotalItemCount;
 
         this.IsInitialDataLoadComplete = true;
-    }
-
-    private async Task OnRowClickHandler(GridRowClickEventArgs args)
-    {
-
-        var item = args.Item as ShelfModel;
-        NavigationManager.NavigateTo($"detail/{item.StorageShelfId}");
     }
 
     private async Task Search()

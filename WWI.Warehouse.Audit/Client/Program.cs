@@ -31,7 +31,6 @@ builder.Services.AddMsalAuthentication(options =>
 
 builder.Services.AddSingleton<IExtendedStringLocalizer, LocalizationProvider>();
 
-builder.Services.AddTelerikBlazor();
 builder.Services.AddToaster(config =>
 {
     //example customizations
